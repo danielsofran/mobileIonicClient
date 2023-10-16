@@ -3,28 +3,31 @@ import {
   IonLabel,
   IonNote
   } from '@ionic/react';
-import { Message } from '../data/messages';
+import { Magazin } from '../api/magazine';
 import './MessageListItem.css';
 
 interface MessageListItemProps {
-  message: Message;
+  magazin: Magazin;
 }
 
-const MessageListItem: React.FC<MessageListItemProps> = ({ message }) => {
+const MessageListItem: React.FC<MessageListItemProps> = ({ magazin }) => {
+
+  const formatDate = (date: Date) => {
+    let newDate = new Date(date);
+    return newDate.toLocaleDateString('ro-RO', {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'});
+  }
+
   return (
-    <IonItem routerLink={`/message/${message.id}`} detail={false}>
-      <div slot="start" className="dot dot-unread"></div>
+    <IonItem routerLink={`/magazine/${magazin.id}`} detail={false}>
+      <div slot="start" className="dot"></div>
       <IonLabel className="ion-text-wrap">
         <h2>
-          {message.fromName}
+          {magazin.name}
           <span className="date">
-            <IonNote>{message.date}</IonNote>
+            <IonNote>{formatDate(magazin.date)}</IonNote>
           </span>
         </h2>
-        <h3>{message.subject}</h3>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        </p>
+        <ion-toggle slot='start' checked={magazin.hasDelivery.toString()} disabled="true">Derivers at home</ion-toggle>
       </IonLabel>
     </IonItem>
   );

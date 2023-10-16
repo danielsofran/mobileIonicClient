@@ -2,7 +2,7 @@ import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home';
-import ViewMessage from './pages/ViewMessage';
+import ViewMagazin from './pages/ViewMagazin';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -22,6 +22,7 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import AddMagazin from "./pages/AddMagazin";
 
 setupIonicReact();
 
@@ -29,15 +30,10 @@ const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
       <IonRouterOutlet>
-        <Route path="/" exact={true}>
-          <Redirect to="/home" />
-        </Route>
-        <Route path="/home" exact={true}>
-          <Home />
-        </Route>
-        <Route path="/message/:id">
-           <ViewMessage />
-        </Route>
+        <Route path="/" exact={true} render={() => <Redirect to="/home" />} />
+        <Route path="/home" exact={true} component={Home} />
+        <Route path="/magazin/add" exact={true} component={AddMagazin} />
+        <Route path="/magazine/:id" exact={true} component={ViewMagazin} />
       </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>
