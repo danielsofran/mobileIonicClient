@@ -23,6 +23,10 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 import AddMagazin from "./pages/AddMagazin";
+import {AuthProvider} from "./context/AuthProvider";
+import {Login} from "./pages/Login";
+import React from "react";
+import {PrivateRoute} from "./context/PrivateRoute";
 
 setupIonicReact();
 
@@ -30,10 +34,13 @@ const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
       <IonRouterOutlet>
-        <Route path="/" exact={true} render={() => <Redirect to="/home" />} />
-        <Route path="/home" exact={true} component={Home} />
-        <Route path="/magazin/add" exact={true} component={AddMagazin} />
-        <Route path="/magazine/:id" exact={true} component={ViewMagazin} />
+        <AuthProvider>
+            <Route path="/" exact={true} render={() => <Redirect to="/login" />} />
+            <Route path="/login" exact={true} component={Login} />
+            <PrivateRoute path="/home" exact={true} component={Home} />
+            <PrivateRoute path="/magazin/add" exact={true} component={AddMagazin} />
+            <PrivateRoute path="/magazine/:id" exact={true} component={ViewMagazin} />
+        </AuthProvider>
       </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>

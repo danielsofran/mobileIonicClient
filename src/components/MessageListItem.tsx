@@ -18,7 +18,7 @@ const MessageListItem: React.FC<MessageListItemProps> = ({ magazin }) => {
   }
 
   return (
-    <IonItem routerLink={`/magazine/${magazin.id}`} detail={false}>
+    <IonItem routerLink={`/magazine/${magazin._id}`} detail={false}>
       <div slot="start" className="dot"></div>
       <IonLabel className="ion-text-wrap">
         <h2>

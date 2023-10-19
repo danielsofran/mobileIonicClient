@@ -1,5 +1,5 @@
 import MagazineListItem from '../components/MessageListItem';
-import {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Magazin, magazineApi, magazineSocket} from '../api/magazine';
 import {
   IonContent, IonFab, IonFabButton,
@@ -10,20 +10,21 @@ import {
   IonRefresherContent,
   IonTitle,
   IonToolbar,
-  useIonViewWillEnter
 } from '@ionic/react';
 import './Home.css';
-import {a} from "vitest/dist/types-198fd1d9";
 import {add} from "ionicons/icons";
 import {RouteComponentProps} from "react-router";
+import {AuthContext} from "../context/AuthProvider";
+import {authConfig} from "../api/axiosInstance";
 
 const Home: React.FC<RouteComponentProps> = ({history}) => {
+  const state = useContext(AuthContext)
 
   const [magazine, setMagazine] = useState<Magazin[]>([]);
   const [error, setError] = useState<string|undefined>();
 
   useEffect(() => {
-    magazineApi.getMagazine().then( response => {
+    magazineApi.getMagazine(authConfig(state.token)).then( response => {
       setMagazine(response.data);
     }).catch( error => {
       setError(error.message)
@@ -33,7 +34,7 @@ const Home: React.FC<RouteComponentProps> = ({history}) => {
   useEffect(() => {
     let canceled = false;
     console.log('wsEffect - connecting');
-    const closeWebSocket = magazineSocket(message => {
+    const closeWebSocket = magazineSocket(state.token, message => {
       if (canceled) {
         return;
       }
@@ -41,7 +42,7 @@ const Home: React.FC<RouteComponentProps> = ({history}) => {
       console.log(`ws message, item ${event}`, magazin);
       if (event === 'created' || event === 'updated') {
         setMagazine(magazine => {
-          const index = magazine.findIndex(it => it.id === magazin.id);
+          const index = magazine.findIndex(it => it._id === magazin._id);
           if (index === -1) {
             magazine.push(magazin);
           } else {
@@ -88,7 +89,7 @@ const Home: React.FC<RouteComponentProps> = ({history}) => {
             <IonList>
               {magazine.length > 0 ? (
                   magazine.map((magazin) => (
-                      <MagazineListItem key={magazin.id} magazin={magazin}/>
+                      <MagazineListItem key={magazin._id} magazin={magazin}/>
                   ))
               ) : (
                   <div className="ion-padding">No messages found.</div>

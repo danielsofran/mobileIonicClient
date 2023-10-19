@@ -1,7 +1,7 @@
 import {axiosInstance} from "./axiosInstance";
 
 export class Magazin {
-    id?: number;
+    _id?: number;
     name: string = "";
     lat: number = 0;
     long: number = 0;
@@ -12,20 +12,20 @@ export class Magazin {
 const MAGAZINE_URL = "/magazine";
 
 export const magazineApi = {
-    getMagazine: () => {
-        return axiosInstance.get(MAGAZINE_URL)
+    getMagazine: (config?) => {
+        return axiosInstance.get(MAGAZINE_URL, config)
     },
-    getMagazin: (id: string) => {
-        return axiosInstance.get(`${MAGAZINE_URL}/${id}`)
+    getMagazin: (id: string, config?) => {
+        return axiosInstance.get(`${MAGAZINE_URL}/${id}`, config)
     },
-    createMagazine: (data: Magazin) => {
-        return axiosInstance.post(MAGAZINE_URL, data)
+    createMagazine: (data: Magazin, config?) => {
+        return axiosInstance.post(MAGAZINE_URL, data, config)
     },
-    updateMagazine: (id: string, data: Magazin) => {
-        return axiosInstance.put(`${MAGAZINE_URL}/${id}`, data)
+    updateMagazine: (id: string, data: Magazin, config?) => {
+        return axiosInstance.put(`${MAGAZINE_URL}/${id}`, data, config)
     },
-    deleteMagazine: (id: string) => {
-        return axiosInstance.delete(`${MAGAZINE_URL}/${id}`)
+    deleteMagazine: (id: string, config?) => {
+        return axiosInstance.delete(`${MAGAZINE_URL}/${id}`, config)
     }
 }
 
@@ -36,10 +36,11 @@ interface MessageData {
     }
 }
 
-export const magazineSocket = (onMessage: (data: MessageData) => void) => {
+export const magazineSocket = (token: string, onMessage: (data: MessageData) => void) => {
     const socket = new WebSocket("ws://localhost:3000");
     socket.onopen = () => {
-        console.log("Connected to WS server");
+        console.log("Connecting to WS server...");
+        socket.send(JSON.stringify({ type: 'authorization', payload: { token } }));
     }
     socket.onclose = () => {
         console.log("Disconnected from WS server");

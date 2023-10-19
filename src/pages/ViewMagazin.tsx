@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {useContext, useState} from 'react';
 import { Magazin, magazineApi } from '../api/magazine';
 import {
   IonBackButton, IonButton,
@@ -17,9 +17,12 @@ import { personCircle } from 'ionicons/icons';
 import { useParams } from 'react-router';
 import './ViewMessage.css';
 import MagazinForm from "../components/MagazinForm";
+import {AuthContext} from "../context/AuthProvider";
+import {authConfig} from "../api/axiosInstance";
 
 
 function ViewMagazin({history}) {
+  const token = useContext(AuthContext).token
   const [magazin, setMagazin] = useState<Magazin>();
   const [showEdit, setShowEdit] = useState(false);
   const params = useParams<{ id: string }>();
@@ -30,7 +33,7 @@ function ViewMagazin({history}) {
   }
 
   useIonViewWillEnter(() => {
-    magazineApi.getMagazin(params.id!).then((response) => {
+    magazineApi.getMagazin(params.id!, authConfig(token)).then((response) => {
       setMagazin(response.data);
     });
   });
@@ -69,7 +72,7 @@ function ViewMagazin({history}) {
             {showEdit ? <>
               <MagazinForm onSave={newMagazin => {
                 console.log(newMagazin);
-                magazineApi.updateMagazine(magazin!.id?.toString(), newMagazin).then(() => {
+                magazineApi.updateMagazine(magazin!._id?.toString(), newMagazin, authConfig(token)).then(() => {
                   history.push('/home');
                   window.location.reload();
                 }).catch(error => {
