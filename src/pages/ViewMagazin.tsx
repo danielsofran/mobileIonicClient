@@ -1,5 +1,5 @@
 import {useContext, useState} from 'react';
-import { Magazin, magazineApi } from '../api/magazine';
+import {Magazin, magazineApi, MagazinOffline} from '../api/magazine';
 import {
   IonBackButton, IonButton,
   IonButtons,
@@ -19,6 +19,7 @@ import './ViewMessage.css';
 import MagazinForm from "../components/MagazinForm";
 import {AuthContext} from "../context/AuthProvider";
 import {authConfig} from "../api/axiosInstance";
+import {getMagazinFromStorage, updateMagazinInStorage} from "../storage/magazine";
 
 
 function ViewMagazin({history}) {
@@ -35,8 +36,29 @@ function ViewMagazin({history}) {
   useIonViewWillEnter(() => {
     magazineApi.getMagazin(params.id!, authConfig(token)).then((response) => {
       setMagazin(response.data);
+    }).catch(errorApi => {
+      getMagazinFromStorage(params.id!).then((magazin: MagazinOffline) => {
+        setMagazin(magazin.magazin);
+      }).catch(errorStorage => {
+        alert("Magazinul nu a fost gasit");
+      })
     });
   });
+
+  const save = (newMagazin: Magazin) => {
+    magazineApi.updateMagazine(magazin!._id!, newMagazin, authConfig(token)).then(() => {
+      setMagazin(newMagazin)
+      setShowEdit(false);
+    }).catch(errorApi => {
+      const show = () => alert(errorApi.response.data.issue.map((it: any) => it.error).join(', '));
+      updateMagazinInStorage(magazin!._id!, newMagazin!).then(() => {
+        setMagazin(newMagazin)
+        setShowEdit(false);
+      }).catch(errorStorage => {
+        show();
+      })
+    });
+  }
 
   return (
     <IonPage id="view-message-page">
@@ -70,15 +92,7 @@ function ViewMagazin({history}) {
             </div>
 
             {showEdit ? <>
-              <MagazinForm onSave={newMagazin => {
-                console.log(newMagazin);
-                magazineApi.updateMagazine(magazin!._id?.toString(), newMagazin, authConfig(token)).then(() => {
-                  history.push('/home');
-                  window.location.reload();
-                }).catch(error => {
-                  alert(error.response.data.issue.map((it: any) => it.error).join(', '));
-                });
-              }} magazin={magazin} />
+              <MagazinForm onSave={(newMagazin) => save(newMagazin)} magazin={magazin} />
               <IonButton onClick={() => setShowEdit(false)}>Cancel</IonButton>
             </> :
                 <IonButton onClick={() => setShowEdit(true)}>Edit</IonButton>

@@ -1,8 +1,6 @@
-import React, { useContext } from 'react';
+import React, {useContext, useEffect} from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { AuthContext, AuthState } from './AuthProvider';
-
-const log = (...args: any[]) => console.log('[Login]: ', ...args);
 
 export interface PrivateRouteProps {
     component: any;
@@ -12,7 +10,11 @@ export interface PrivateRouteProps {
 
 export const PrivateRoute: React.FC<PrivateRouteProps> = ({ component: Component, ...rest }) => {
     const { isAuthenticated } = useContext<AuthState>(AuthContext);
-    log('render, isAuthenticated', isAuthenticated);
+
+    useEffect(() => {
+        console.log(rest.path, 'isAuthenticated', isAuthenticated);
+    }, []);
+
     return (
         <Route {...rest} render={props => {
             if (isAuthenticated) {

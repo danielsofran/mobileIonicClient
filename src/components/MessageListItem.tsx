@@ -5,12 +5,15 @@ import {
   } from '@ionic/react';
 import { Magazin } from '../api/magazine';
 import './MessageListItem.css';
+import React from "react";
 
 interface MessageListItemProps {
   magazin: Magazin;
 }
 
 const MessageListItem: React.FC<MessageListItemProps> = ({ magazin }) => {
+
+  //console.log("magazin", magazin)
 
   const formatDate = (date: Date) => {
     let newDate = new Date(date);

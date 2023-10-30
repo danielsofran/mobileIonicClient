@@ -1,7 +1,7 @@
 import {axiosInstance} from "./axiosInstance";
 
 export class Magazin {
-    _id?: number;
+    _id?: string;
     name: string = "";
     lat: number = 0;
     long: number = 0;
@@ -9,22 +9,36 @@ export class Magazin {
     hasDelivery: boolean = false;
 }
 
+export class MagazinOffline {
+    magazin: Magazin;
+    state: "read" | "created" | "updated";
+
+    constructor(magazin: Magazin, state: "read" | "created" | "updated" = "read") {
+        this.magazin = magazin;
+        this.state = state;
+    }
+}
+
 const MAGAZINE_URL = "/magazine";
 
 export const magazineApi = {
-    getMagazine: (config?) => {
-        return axiosInstance.get(MAGAZINE_URL, config)
+    getMagazine: (config, page?, name?, hasDelivery?) => {
+        const params = new URLSearchParams();
+        if (page) params.append("page", page.toString());
+        if (name) params.append("name", name);
+        //if (hasDelivery) params.append("hasDelivery", hasDelivery.toString());
+        return axiosInstance.get(MAGAZINE_URL, { ...config, params })
     },
-    getMagazin: (id: string, config?) => {
+    getMagazin: (id: string, config) => {
         return axiosInstance.get(`${MAGAZINE_URL}/${id}`, config)
     },
-    createMagazine: (data: Magazin, config?) => {
+    createMagazine: (data: Magazin, config) => {
         return axiosInstance.post(MAGAZINE_URL, data, config)
     },
-    updateMagazine: (id: string, data: Magazin, config?) => {
+    updateMagazine: (id: string, data: Magazin, config) => {
         return axiosInstance.put(`${MAGAZINE_URL}/${id}`, data, config)
     },
-    deleteMagazine: (id: string, config?) => {
+    deleteMagazine: (id: string, config) => {
         return axiosInstance.delete(`${MAGAZINE_URL}/${id}`, config)
     }
 }
@@ -41,6 +55,7 @@ export const magazineSocket = (token: string, onMessage: (data: MessageData) => 
     socket.onopen = () => {
         console.log("Connecting to WS server...");
         socket.send(JSON.stringify({ type: 'authorization', payload: { token } }));
+        console.log("Connected to WS server");
     }
     socket.onclose = () => {
         console.log("Disconnected from WS server");

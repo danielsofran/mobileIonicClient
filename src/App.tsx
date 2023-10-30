@@ -35,10 +35,10 @@ const App: React.FC = () => (
     <IonReactRouter>
       <IonRouterOutlet>
         <AuthProvider>
-            <Route path="/" exact={true} render={() => <Redirect to="/login" />} />
+            <Route path="/" exact={true} render={() => <Redirect to="/home" />} />
             <Route path="/login" exact={true} component={Login} />
             <PrivateRoute path="/home" exact={true} component={Home} />
-            <PrivateRoute path="/magazin/add" exact={true} component={AddMagazin} />
+            <Route path="/magazin/add" exact={true} component={AddMagazin} />
             <PrivateRoute path="/magazine/:id" exact={true} component={ViewMagazin} />
         </AuthProvider>
       </IonRouterOutlet>

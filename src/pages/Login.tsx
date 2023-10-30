@@ -28,7 +28,6 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
     }, [username, password]);
     useEffect(() => {
         if (isAuthenticated) {
-            log("token=", token)
             log('redirecting to home');
             history.push('/home');
         }

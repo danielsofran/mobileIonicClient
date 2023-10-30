@@ -9,6 +9,6 @@ export const axiosInstance = axios.create({
 
 export const authConfig = (token?: string) => ({
     headers: {
-        Autorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
     }
 })
