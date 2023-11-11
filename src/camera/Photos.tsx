@@ -15,9 +15,10 @@ import { camera, close, download, trash } from 'ionicons/icons';
 import { MyPhoto, usePhotos } from './usePhotos';
 import {MyModal} from "./MyModal";
 import {Title} from "./Title";
+import BottomModal from "./BottomModal";
 
 const Photos: React.FC = () => {
-  const { photos, takePhoto, deletePhoto, downloadPhoto } = usePhotos();
+  const { photos, takePhoto } = usePhotos();
   const [selectedPhoto, setSelectedPhoto] = useState<MyPhoto>();
   const animationRef = useRef<CreateAnimation|undefined>(undefined);
   useEffect(simpleAnimationReact, [animationRef.current]);
@@ -63,36 +64,7 @@ const Photos: React.FC = () => {
           </IonRow>
         </IonGrid>
 
-        <IonActionSheet
-          isOpen={!!selectedPhoto}
-          buttons={[{
-            text: 'Delete',
-            role: 'destructive',
-            icon: trash,
-            handler: () => {
-              if (selectedPhoto) {
-                deletePhoto(selectedPhoto);
-                setSelectedPhoto(undefined);
-              }
-            }
-          }, {
-            text: 'Save on device',
-            icon: download,
-            role: 'download',
-            handler: () => {
-              if(selectedPhoto) {
-                downloadPhoto(selectedPhoto);
-                setSelectedPhoto(selectedPhoto);
-              }
-
-            }
-          }, {
-            text: 'Cancel',
-            icon: close,
-            role: 'cancel'
-            }]}
-          onDidDismiss={() => setSelectedPhoto(undefined)}
-        />
+        <BottomModal photos={photos} selected={selectedPhoto} setSelected={setSelectedPhoto} />
       </IonContent>
     </IonPage>
   );

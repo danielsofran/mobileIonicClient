@@ -29,7 +29,8 @@ export function usePhotos() {
     await writeFile(filepath, base64String!);
     const webviewPath = `data:image/jpeg;base64,${base64String}`
     const newPhoto = { filepath, webviewPath };
-    const newPhotos = [newPhoto, ...photos];
+    const reducedPhotos = photos.filter(p => p.filepath !== filepath)
+    const newPhotos = [newPhoto, ...reducedPhotos];
     await set(PHOTOS, JSON.stringify(newPhotos));
     setPhotos(newPhotos);
   }

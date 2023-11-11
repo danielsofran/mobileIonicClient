@@ -19,7 +19,7 @@ export const ViewMap: React.FC = (props: MapProps) => {
   const [coords, setCoords] = React.useState<Coords>(props.coords || { lat: 0, lng: 0 })
   const markerId = useRef('')
 
-  const KEY = process.env.MAPS_KEY || '';
+  const KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
   async function createMap() {
     if (!mapRef.current) return;

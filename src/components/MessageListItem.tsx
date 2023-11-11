@@ -5,6 +5,7 @@ import {
   } from '@ionic/react';
 import { Magazin } from '../api/magazine';
 import './MessageListItem.css';
+import {MagazinImage} from "./MagazinImage";
 
 interface MessageListItemProps {
   magazin: Magazin;
@@ -28,6 +29,9 @@ const MessageListItem: React.FC<MessageListItemProps> = ({ magazin }) => {
           </span>
         </h2>
         <ion-toggle slot='start' checked={magazin.hasDelivery.toString()} disabled="true">Derivers at home</ion-toggle>
+        <ion-tabs>
+          <MagazinImage magazinId={magazin.id}/>
+        </ion-tabs>
       </IonLabel>
     </IonItem>
   );

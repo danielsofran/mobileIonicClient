@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Magazin, magazineApi } from '../api/magazine';
 import {
+  IonActionSheet,
   IonBackButton, IonButton,
   IonButtons,
   IonContent,
@@ -13,17 +14,22 @@ import {
   IonToolbar,
   useIonViewWillEnter,
 } from '@ionic/react';
-import { personCircle } from 'ionicons/icons';
+import {close, download, personCircle, trash} from 'ionicons/icons';
 import { useParams } from 'react-router';
 import './ViewMessage.css';
 import MagazinForm from "../components/MagazinForm";
 import {ViewMap} from "../maps/ViewMap";
+import {MyPhoto, usePhotos} from "../camera/usePhotos";
+import BottomModal from "../camera/BottomModal";
+import {MagazinImage} from "../components/MagazinImage";
 
 
 function ViewMagazin({history}) {
   const [magazin, setMagazin] = useState<Magazin>();
   const [showEdit, setShowEdit] = useState(false);
   const params = useParams<{ id: string }>();
+  const { photos, takePhoto } = usePhotos();
+  const [selectedPhoto, setSelectedPhoto] = useState<MyPhoto>();
 
   const formatDate = (date: Date) => {
     let newDate = new Date(date);
@@ -63,6 +69,7 @@ function ViewMagazin({history}) {
 
             {!showEdit && <div className="ion-padding">
               <ViewMap coords={{lat: magazin.lat, lng: magazin.long}} />
+              <MagazinImage magazinId={magazin.id}/>
             </div>}
 
             {showEdit ? <>
@@ -84,6 +91,8 @@ function ViewMagazin({history}) {
         ) : (
           <div>Magazinul nu a fost gasit</div>
         )}
+
+        <BottomModal photos={photos} selected={selectedPhoto} setSelected={setSelectedPhoto} />
       </IonContent>
     </IonPage>
   );
