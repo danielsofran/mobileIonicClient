@@ -17,6 +17,7 @@ import { personCircle } from 'ionicons/icons';
 import { useParams } from 'react-router';
 import './ViewMessage.css';
 import MagazinForm from "../components/MagazinForm";
+import {ViewMap} from "../maps/ViewMap";
 
 
 function ViewMagazin({history}) {
@@ -60,11 +61,9 @@ function ViewMagazin({history}) {
               </IonLabel>
             </IonItem>
 
-            <div className="ion-padding">
-              <p>
-                Magazinul acesta a fost adaugat de catre unul din utilizatorii aplicatiei. Daca doresti sa adaugi si tu un magazin, te rugam sa ne contactezi la adresa de email: <IonNote> magazin@yahoo.com </IonNote>
-              </p>
-            </div>
+            {!showEdit && <div className="ion-padding">
+              <ViewMap coords={{lat: magazin.lat, lng: magazin.long}} />
+            </div>}
 
             {showEdit ? <>
               <MagazinForm onSave={newMagazin => {
