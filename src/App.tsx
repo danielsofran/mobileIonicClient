@@ -23,8 +23,16 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 import AddMagazin from "./pages/AddMagazin";
+import Photos from "./camera/Photos";
+
+/* PWA Elements */
+import { defineCustomElements } from '@ionic/pwa-elements/loader';
+import {ViewMap} from "./maps/ViewMap";
 
 setupIonicReact();
+
+// Call the element loader before the render call
+defineCustomElements(window);
 
 const App: React.FC = () => (
   <IonApp>
@@ -34,6 +42,9 @@ const App: React.FC = () => (
         <Route path="/home" exact={true} component={Home} />
         <Route path="/magazin/add" exact={true} component={AddMagazin} />
         <Route path="/magazine/:id" exact={true} component={ViewMagazin} />
+
+        <Route path="/photos" exact={true} component={Photos} />
+        <Route path="/maps" exact={true} component={ViewMap} />
       </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>
